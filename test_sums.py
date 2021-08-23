@@ -56,7 +56,7 @@ decoder = PointerLSTM(hidden_size, output_dim=hidden_size, name="decoder")(encod
 
 model = Model(input=main_input, output=decoder)
 
-print("loading weights from {}...".format(weights_file))
+print(("loading weights from {}...".format(weights_file)))
 try:
     model.load_weights(weights_file)
 except IOError:
@@ -71,8 +71,8 @@ print('testing...')
 p = model.predict(x_test)
 
 for y_, p_ in zip(y_test, p)[:5]:
-    print("y_test:", y_)
-    print("p:     ", p_.argmax(axis=1))
+    print(("y_test:", y_))
+    print(("p:     ", p_.argmax(axis=1)))
     print()
 
-print("categorical accuracy: ", categorical_accuracy(YY_test, p).eval())
+print(("categorical accuracy: ", categorical_accuracy(YY_test, p).eval()))

@@ -58,7 +58,7 @@ YY_test = YY[split_at:]
 assert (n_steps == x_train.shape[1])
 n_features = x_train.shape[2]
 
-print(("sequence length is {}, {} features at each step.".format(n_steps, n_features)))
+print("sequence length is {}, {} features at each step.".format(n_steps, n_features))
 
 #
 
@@ -70,7 +70,7 @@ decoder = PointerLSTM(hidden_size, output_dim=hidden_size, name="decoder")(encod
 
 model = Model(input=main_input, output=decoder)
 
-print(("loading weights from {}...".format(weights_file)))
+print("loading weights from {}...".format(weights_file))
 try:
     model.load_weights(weights_file)
 except IOError:
@@ -91,8 +91,8 @@ history = model.fit(x_train, YY_train, nb_epoch=1, batch_size=batch_size,
 p = model.predict(x_test)
 
 for y_, p_ in list(zip(y_test, p))[:5]:
-    print(("y_test:", y_))
-    print(("p:     ", p_.argmax(axis=1)))
+    print("y_test:", y_)
+    print("p:     ", p_.argmax(axis=1))
     print()
 
 model.save_weights(weights_file)

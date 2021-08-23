@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"order triplets by the sum of their two elements"
+"order integer sequences of length given by n_steps"
 
 import numpy as np
 from keras.layers import LSTM, Input
@@ -11,26 +11,23 @@ from PointerLSTM import PointerLSTM
 
 #
 
-x_file = 'data/x_sums.csv'
-y_file = 'data/y_sums.csv'
+n_steps = 3
+
+x_file = 'data/x_{}.csv'.format(n_steps)
+y_file = 'data/y_{}.csv'.format(n_steps)
 
 split_at = 9000
 batch_size = 100
 
-
-hidden_size = 100
-weights_file = 'model_weights/model_weights_sums_{}.hdf5'.format(hidden_size)
-
-n_steps = 3
-n_features = 2
+hidden_size = 64
+weights_file = 'model_weights/model_weights_{}_steps_{}.hdf5'.format(n_steps, hidden_size)
 
 #
 
 x = np.loadtxt(x_file, delimiter=',', dtype=int)
 y = np.loadtxt(y_file, delimiter=',', dtype=int)
 
-x = x.reshape(x.shape[0], n_steps, -1)
-assert (x.shape[-1] == n_features)
+x = np.expand_dims(x, axis=2)
 
 YY = []
 for y_ in y:
@@ -40,23 +37,24 @@ YY = np.asarray(YY)
 x_train = x[:split_at]
 x_test = x[split_at:]
 
-y_train = y[:split_at]
 y_test = y[split_at:]
-
 YY_train = YY[:split_at]
 YY_test = YY[split_at:]
+
+assert (n_steps == x.shape[1])
 
 #
 
 print("building model...")
-main_input = Input(shape=(x.shape[1], x.shape[2]), name='main_input')
+main_input = Input(shape=(n_steps, 1), name='main_input')
 
-encoder = LSTM(output_dim=hidden_size, return_sequences=True, name="encoder")(main_input)
-decoder = PointerLSTM(hidden_size, output_dim=hidden_size, name="decoder")(encoder)
+encoder = LSTM(units=hidden_size, return_sequences=True, name="encoder")(main_input)
+print(encoder)
+decoder = PointerLSTM(hidden_size, units=hidden_size, name="decoder")(encoder)
 
-model = Model(input=main_input, output=decoder)
+model = Model(inputs=main_input, outputs=decoder)
 
-print(("loading weights from {}...".format(weights_file)))
+print("loading weights from {}...".format(weights_file))
 try:
     model.load_weights(weights_file)
 except IOError:
@@ -68,17 +66,20 @@ model.compile(optimizer='rmsprop',
 
 print('training and saving model weights each epoch...')
 
-
 validation_data = (x_test, YY_test)
 
-history = model.fit(x_train, YY_train, nb_epoch=1, batch_size=batch_size,
+
+epoch_counter = 0
+
+history = model.fit(x_train, YY_train, epochs=1, batch_size=batch_size,
                     validation_data=validation_data)
 
 p = model.predict(x_test)
 
 for y_, p_ in list(zip(y_test, p))[:5]:
-    print(("y_test:", y_))
-    print(("p:     ", p_.argmax(axis=1)))
+    print("epoch_counter: ", epoch_counter)
+    print("y_test:", y_)
+    print("p:     ", p_.argmax(axis=1))
     print()
 
-model.save_weights(weights_file)
+model.save(weights_file)

@@ -54,7 +54,7 @@ decoder = PointerLSTM(hidden_size, units=hidden_size, name="decoder")(encoder)
 
 model = Model(inputs=main_input, outputs=decoder)
 
-print("loading weights from {}...".format(weights_file))
+print(("loading weights from {}...".format(weights_file)))
 try:
     model.load_weights(weights_file)
 except IOError:
@@ -77,9 +77,9 @@ history = model.fit(x_train, YY_train, epochs=1, batch_size=batch_size,
 p = model.predict(x_test)
 
 for y_, p_ in list(zip(y_test, p))[:5]:
-    print("epoch_counter: ", epoch_counter)
-    print("y_test:", y_)
-    print("p:     ", p_.argmax(axis=1))
+    print(("epoch_counter: ", epoch_counter))
+    print(("y_test:", y_))
+    print(("p:     ", p_.argmax(axis=1)))
     print()
 
 model.save(weights_file)
