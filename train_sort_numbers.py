@@ -94,14 +94,8 @@ validation_data = (x_test, YY_test)
 history = model.fit(x_train, YY_train, epochs=epochs, batch_size=batch_size,
                     validation_data=validation_data)
 
-p = model.predict(x_test)
-y_true = []
-y_pred = []
-for i in range(len(x_test)):
-    y_true.append(xx[i][:,0][y].flatten())
-    y_pred.append(xx[i][:,0][p.argmax(axis=1)].flatten())
-
-print("test accuracy: ", accuracy_score(y_true, y_pred))
+# p = model.predict(x_test)
+# print("test accuracy: ", accuracy_score(YY_test, p))
 
 
 

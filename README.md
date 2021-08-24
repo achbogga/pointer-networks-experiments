@@ -79,20 +79,20 @@
     ```
 
 ### Example usage:
+    * Here the upper_limit is for the model to generalize well (for example if the upper limit is only 5 for seq_len 5. It will only see permutations of whole numbers up to 5)
+    * But if the upper_limit is 10 for the seq_len 5. It will see permutations of whole numbers of upto 10 but only length 5 sequences. Therefore, the network generalizes well
     ```
     cd pointer-networks-experiments
     python train_sort_numbers.py 5 --upper_limit 10 --epochs 10 --test_sequence 2 1 6 8 9
-    ('ground_truth:', array([[[1],
-        [2],
-        [6],
-        [8],
-        [9]]]))
-    ('predicted_sequence:     ', array([[[1],
-        [1],
-        [6],
-        [6],
-        [9]]]))
     ```
+
+## Accuracy discussion
+    * The best model is modeled after the order matters: Sequence to Sequence models with sets paper
+    * The model only reaches 66% validation accuracy if we train for 1000 epochs with seq_len 5 and upper_limit 10
+    * Meaning the model saturates at 66% accuracy if the upper_limit is greater than seq_len
+    * The model accuracy when querying beyond the training upper limit is around 40 % with seq_len 5
+    * If we fix the upper limit to be 5 during training and testing and query only a permutation with seq_len 5, then we get 100% accuracy.
+    * This means that we have to explicitly and painfully train all the possible permutations for the model to learn well indicating that this is computationally exponential task.
 
 ### Code bootstrapped from [https://github.com/zygmuntz/pointer-networks-experiments](https://github.com/zygmuntz/pointer-networks-experiments)
     * Related blogpost -> [http://fastml.com/introduction-to-pointer-networks/](http://fastml.com/introduction-to-pointer-networks/)
