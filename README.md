@@ -84,6 +84,11 @@
     ```
     cd pointer-networks-experiments
     python train_sort_numbers.py 5 --upper_limit 10 --epochs 10 --test_sequence 2 1 6 8 9
+    val_acc: 0.6210
+    input_sequence:  [9 8 4 6 1]
+    ('ground_truth:', array([1, 4, 6, 8, 9]))
+    ('predicted_sequence:     ', array([1, 6, 8, 4, 9]))
+    accuracy:  0.4
     ```
 
 ## Accuracy discussion
