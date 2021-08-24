@@ -14,8 +14,8 @@ from PointerLSTM import PointerLSTM
 
 n_steps = 3
 
-x_file = 'data/x.csv'
-y_file = 'data/y.csv'
+x_file = 'data/x_{}.csv'.format(n_steps)
+y_file = 'data/y_{}.csv'.format(n_steps)
 
 split_at = 0
 batch_size = 100
@@ -70,9 +70,9 @@ print("testing...")
 p = model.predict(x_test[0:1])
 p_bin = p.argmax(axis=2)
 
-for y_, p_ in zip(y_test, p)[:5]:
+for y_, p_ in list(zip(y_test, p))[:5]:
     print(("y_test:", y_))
     print(("p:     ", p_.argmax(axis=1)))
     print()
 
-print(("categorical accuracy: ", categorical_accuracy(YY_test, p).eval()))
+# print(("categorical accuracy: ", categorical_accuracy(YY_test, p).eval()))
